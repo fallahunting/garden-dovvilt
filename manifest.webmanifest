@@ -1,0 +1,18 @@
+{
+  "name": "ViltIQ – AI-analys & jaktprognos",
+  "short_name": "ViltIQ",
+  "description": "AI-analys och jaktprognos",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d1611",
+  "theme_color": "#0d1611",
+  "icons": [
+    {
+      "src": "viltiq-logo.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
