@@ -8,7 +8,7 @@ function forecastSummary(title,f){if(!f)return '<div class="row"><span>'+title+'
 async function load(){
  const host=document.getElementById("viltiq-live-analysis");if(!host)return;
  try{
-  await fetch(ENGINE+"?t="+Date.now(),{cache:"no-store"}).catch(()=>{});
+  fetch(ENGINE+"?t="+Date.now(),{cache:"no-store"}).catch(()=>{});
   const r=await fetch(API+"?t="+Date.now(),{cache:"no-store"}),d=await r.json();if(!d.ok)throw Error();
   const rs=(d.recent||[]).slice(),week=d.week||[],ev=(d.liveEvents||d.events||[]).slice(),now=Date.now();
   const recentImages=rs.filter(a=>a.camera_images?.captured_at).sort((a,b)=>new Date(b.camera_images.captured_at)-new Date(a.camera_images.captured_at));
