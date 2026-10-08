@@ -1,4 +1,4 @@
-(()=>{const API="https://djbrmswvlmivvltcsstr.supabase.co/functions/v1/analysis-feed",ENGINE="https://djbrmswvlmivvltcsstr.supabase.co/functions/v1/forecast-engine",
+(()=>{const API="https://djbrmswvlmivvltcsstr.supabase.co/functions/v1/analysis-feed?view=start",ENGINE="https://djbrmswvlmivvltcsstr.supabase.co/functions/v1/forecast-engine",
 esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])),
 pct=n=>Math.round((Number(n)||0)*100),
 fmt=t=>new Date(t).toLocaleString("sv-SE",{timeZone:"Europe/Stockholm",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}),
@@ -9,7 +9,7 @@ async function load(){
  const host=document.getElementById("viltiq-live-analysis");if(!host)return;
  try{
   fetch(ENGINE+"?t="+Date.now(),{cache:"no-store"}).catch(()=>{});
-  const r=await fetch(API+"?t="+Date.now(),{cache:"no-store"}),d=await r.json();if(!d.ok)throw Error();
+  const r=await fetch(API+"&t="+Date.now(),{cache:"no-store"}),d=await r.json();if(!d.ok)throw Error();
   const rs=(d.recent||[]).slice(),week=d.week||[],ev=(d.liveEvents||d.events||[]).slice(),now=Date.now();
   const recentImages=rs.filter(a=>a.camera_images?.captured_at).sort((a,b)=>new Date(b.camera_images.captured_at)-new Date(a.camera_images.captured_at));
   const recentEvents=ev.filter(e=>now-new Date(e.event_end||e.event_start).getTime()<=864e5).sort((a,b)=>new Date(b.event_end||b.event_start)-new Date(a.event_end||a.event_start));
@@ -26,4 +26,4 @@ async function load(){
   const invHost=document.getElementById("viltiq-inventory-info");if(invHost){const w=week.filter(a=>a.camera_images?.captured_at&&now-new Date(a.camera_images.captured_at)<=7*864e5),it=w.reduce((x,a)=>(x.m+=a.male_count||0,x.f+=a.female_count||0,x.c+=a.calf_count||0,x.u+=a.unknown_count||0,x),{m:0,f:0,c:0,u:0});invHost.innerHTML='<div class="card"><div class="section-label">INVENTERING · UNDER UTVÄRDERING</div><h2>Senaste 7 dygnen</h2><div class="row"><span>Hindar</span><b>'+it.f+'</b></div><div class="row"><span>Kalvar</span><b>'+it.c+'</b></div><div class="row"><span>Hjortar</span><b>'+it.m+'</b></div>'+(it.u?'<div class="row"><span>Okända</span><b>'+it.u+'</b></div>':'')+'<p class="note">Den här vyn summerar AI-tolkningen per bild och kan därför räkna samma djur flera gånger. Den ligger tillfälligt under Info medan vi avgör om den ska byggas om eller tas bort.</p></div>'}
  }catch(e){host.innerHTML='<div class="card"><b>Liveanalysen kunde inte hämtas.</b></div>'}
 }
-document.addEventListener("DOMContentLoaded",load);setInterval(load,60000)})();
+load();setInterval(load,60000)})();
